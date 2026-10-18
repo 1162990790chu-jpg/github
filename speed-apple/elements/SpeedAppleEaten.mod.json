@@ -1,0 +1,8 @@
+{
+  "_fv": 89,
+  "_type": "procedure",
+  "definition": {
+    "procedurexml": "<xml xmlns=\"https://developers.google.com/blockly/xml\">\n  <block type=\"event_trigger\" deletable=\"false\" x=\"40\" y=\"40\">\n    <field name=\"trigger\">no_ext_trigger</field>\n    <next><block type=\"entity_add_potion\">\n      <field name=\"potion\">SPEED</field>\n      <value name=\"entity\"><block type=\"entity_from_deps\"/></value>\n      <value name=\"duration\"><block type=\"math_number\"><field name=\"NUM\">200</field></block></value>\n      <value name=\"level\"><block type=\"math_number\"><field name=\"NUM\">0</field></block></value>\n    </block></next>\n  </block>\n</xml>\n",
+    "skipDependencyNullCheck": false
+  }
+}

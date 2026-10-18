@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "speedapple",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:apple",
+    "minecraft:sugar"
+  ],
+  "result": {
+    "id": "speedapple:speed_apple",
+    "count": 1
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_fv": 89,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "recipeRetstackSize": 1,
+    "group": "speedapple",
+    "unlockingItems": [
+      "Items.APPLE"
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": true,
+    "recipeSlots": [
+      "Items.APPLE",
+      "Items.SUGAR"
+    ],
+    "recipeReturnStack": "CUSTOM:SpeedApple",
+    "name": "speed_apple_recipe",
+    "namespace": "mod"
+  }
+}

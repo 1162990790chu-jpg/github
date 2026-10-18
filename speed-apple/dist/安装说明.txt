@@ -1,0 +1,11 @@
+适用：Minecraft Java 26.2 + Fabric Loader 0.19.3
+
+把 speedapple-1.0.0+mc26.2.jar 放入该实例的 mods 文件夹。
+需要 Fabric API；本目录已附 fabric-api-0.155.2+26.2.jar。已有对应版本时不要重复安装。
+
+苹果 + 糖，无序合成 1 个加速苹果。吃完获得速度I，持续10秒。
+可以在满饥饿值时食用。创造模式可从食物栏取得。
+测试命令：/give @s speedapple:speed_apple 16
+
+已经通过 Gradle 编译检查，尚未在游戏内进行食用测试。
+可编辑项目在上一级 speedapple.mcreator，详细说明见 README.md。

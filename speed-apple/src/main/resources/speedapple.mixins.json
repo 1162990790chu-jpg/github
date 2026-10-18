@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "package": "net.mcreator.speedapple.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "refmap": "speedapple.refmap.json",
+  "mixins": [
+    "LivingEntityMixin",
+    "PlayerMixin",
+    "ItemStackMixin",
+    "BlockItemMixin",
+    "BoneMealItemMixin",
+    "CommandsMixin",
+    "ExperienceOrbMixin",
+    "RepairItemRecipeMixin",
+    "ServerPlayerMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8.4"
+}

@@ -1,0 +1,200 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version '1.17-SNAPSHOT'
+}
+
+version = '1.0'
+base.archivesName = "modid"
+
+loom {
+    if (file("src/main/resources/META-INF/speedapple.classtweaker").exists())
+        accessWidenerPath = file("src/main/resources/META-INF/speedapple.classtweaker")
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:26.2"
+    implementation "net.fabricmc:fabric-loader:0.19.3"
+
+    // Fabric API
+    implementation "net.fabricmc.fabric-api:fabric-api:0.155.2+26.2"
+}
+
+// We need to do this because MCreator doesn't allow to split armor textures in multiple folders
+tasks.named('processResources', ProcessResources) {
+    doLast {
+        copy {
+            from(layout.buildDirectory.dir("resources/main/assets/speedapple/textures/entity/equipment/humanoid"))
+            into(layout.buildDirectory.dir("resources/main/assets/speedapple/textures/entity/equipment/humanoid_leggings"))
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 25
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+apply from: 'mcreator.gradle'
+
+// MCreator runs "Run server and client" as one Gradle invocation containing both
+// runServer and runClient. Loom's normal runServer task blocks until the dedicated
+// server exits, so Gradle never reaches runClient.
+//
+// For the combined invocation only, launch the exact Loom-configured server Java
+// command as a child process, wait only until the server is actually listening, and
+// then let Gradle continue to runClient. Standalone runServer keeps Loom's normal
+// foreground behavior.
+def requestedMCreatorTasks = gradle.startParameter.taskNames.collect { name ->
+    name.tokenize(':').last()
+}
+def mcreatorCombinedServerClientRun = requestedMCreatorTasks.contains('runServer') && requestedMCreatorTasks.contains('runClient')
+def mcreatorCombinedServerProcess = [process: null]
+
+def stopMCreatorCombinedServer = {
+    Process process = mcreatorCombinedServerProcess.process
+    if (process != null && process.isAlive()) {
+        if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+            new ProcessBuilder('taskkill', '/PID', Long.toString(process.pid()), '/T', '/F')
+                    .redirectErrorStream(true)
+                    .start()
+                    .waitFor()
+        } else {
+            def descendants = process.toHandle().descendants().toList().reverse()
+            descendants.each { handle ->
+                if (handle.isAlive()) handle.destroy()
+            }
+            process.destroy()
+            process.waitFor(3, java.util.concurrent.TimeUnit.SECONDS)
+            descendants.each { handle ->
+                if (handle.isAlive()) handle.destroyForcibly()
+            }
+            if (process.isAlive()) process.destroyForcibly()
+        }
+    }
+    mcreatorCombinedServerProcess.process = null
+}
+
+tasks.register('stopMCreatorCombinedServer') {
+    doLast {
+        stopMCreatorCombinedServer()
+    }
+}
+
+if (mcreatorCombinedServerClientRun) {
+    afterEvaluate {
+        def serverTask = tasks.named('runServer').get()
+        def serverRunConfig = loom.runs.getByName('server')
+
+        // Clearing JavaExec's action removes Gradle's inferred relationship to the
+        // downloaded assets directory, so keep it explicit for Gradle 9 validation.
+        serverTask.dependsOn('downloadAssets')
+
+        serverTask.actions.clear()
+        serverTask.doLast {
+            // Match Loom 1.17's AbstractRunTask launch as closely as possible:
+            // Java launcher + all JavaExec/Loom JVM args + dev-launch main class +
+            // program arguments. Calling allJvmArgs also lets Loom create its @argfile
+            // containing the runtime classpath when that mode is enabled.
+            String javaExec = serverTask.javaLauncher.get().executablePath.asFile.absolutePath
+            List<String> command = [javaExec]
+            command.addAll(serverTask.allJvmArgs.collect { it.toString() })
+            command.add(serverTask.mainClass.get())
+
+            if (serverTask.args != null) {
+                command.addAll(serverTask.args.collect { it.toString() })
+            }
+            serverTask.argumentProviders.each { provider ->
+                provider.asArguments().each { arg ->
+                    command.add(arg.toString())
+                }
+            }
+
+            // Loom normally applies the run configuration's working directory and
+            // environment inside AbstractRunTask.exec(). Because the normal action was
+            // replaced above, apply those values explicitly here as well. Missing these
+            // values can make DevLaunchInjector exit immediately before the server binds.
+            File runDirectory = serverRunConfig.runDirectory.get().asFile
+            if (!runDirectory.exists()) {
+                runDirectory.mkdirs()
+            }
+
+            ProcessBuilder processBuilder = new ProcessBuilder(command)
+            processBuilder.directory(runDirectory)
+            processBuilder.redirectErrorStream(true)
+
+            serverTask.environment.each { key, value ->
+                if (value != null) {
+                    processBuilder.environment().put(key.toString(), value.toString())
+                }
+            }
+            serverRunConfig.environmentVars.get().each { key, value ->
+                if (value != null) {
+                    processBuilder.environment().put(key.toString(), value.toString())
+                }
+            }
+
+            // Keep a dedicated server log because the detached child process is no
+            // longer Gradle's foreground JavaExec process. If startup fails, surface the
+            // log in the Gradle error instead of leaving the client with getsockopt.
+            File combinedServerLog = new File(runDirectory, 'mcreator-combined-server.log')
+            processBuilder.redirectOutput(combinedServerLog)
+
+            Process process = processBuilder.start()
+            mcreatorCombinedServerProcess.process = process
+
+            // MCreator writes a random development port into server.properties and the
+            // generated client connects to that same port. Wait until the server has
+            // really bound the socket before allowing Gradle to proceed to runClient.
+            int serverPort = 25565
+            File serverProperties = new File(runDirectory, 'server.properties')
+            if (serverProperties.isFile()) {
+                Properties properties = new Properties()
+                serverProperties.withInputStream { properties.load(it) }
+                String configuredPort = properties.getProperty('server-port')
+                if (configuredPort != null && configuredPort.isInteger()) {
+                    serverPort = configuredPort.toInteger()
+                }
+            }
+
+            long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.SECONDS.toNanos(45)
+            boolean serverReady = false
+            while (System.nanoTime() < deadline) {
+                if (!process.isAlive()) {
+                    String details = combinedServerLog.isFile() ? combinedServerLog.getText('UTF-8') : ''
+                    throw new GradleException("MCreator combined Fabric server exited before opening port " + serverPort + ".\n" + details)
+                }
+
+                try {
+                    Socket socket = new Socket()
+                    try {
+                        socket.connect(new InetSocketAddress('127.0.0.1', serverPort), 250)
+                        serverReady = true
+                        break
+                    } finally {
+                        socket.close()
+                    }
+                } catch (IOException ignored) {
+                    Thread.sleep(200)
+                }
+            }
+
+            if (!serverReady) {
+                stopMCreatorCombinedServer()
+                String details = combinedServerLog.isFile() ? combinedServerLog.getText('UTF-8') : ''
+                throw new GradleException("MCreator combined Fabric server did not open port " + serverPort + " within 45 seconds.\n" + details)
+            }
+
+            logger.lifecycle("MCreator combined Fabric server is ready on localhost:" + serverPort)
+        }
+
+        // Keep the server alive while the client is running, then clean up the complete
+        // process tree so no Java process remains behind to lock Loom/workspace files.
+        tasks.named('runClient').configure {
+            finalizedBy('stopMCreatorCombinedServer')
+        }
+    }
+}

@@ -1,0 +1,107 @@
+{
+  "mod_elements": [
+    {
+      "name": "SpeedAppleEaten",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "speed_apple_eaten",
+      "metadata": {
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ],
+        "files": [
+          "src/main/java/net/mcreator/speedapple/procedures/SpeedAppleEatenProcedure.java"
+        ]
+      }
+    },
+    {
+      "name": "SpeedApple",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "speed_apple",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/speedapple/item/SpeedAppleItem.java",
+          "src/main/resources/assets/speedapple/models/item/speed_apple.json",
+          "src/main/resources/assets/speedapple/items/speed_apple.json"
+        ]
+      }
+    },
+    {
+      "name": "SpeedAppleRecipe",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "speed_apple_recipe",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/speedapple/advancement/recipes/speed_apple_recipe.json",
+          "src/main/resources/data/speedapple/recipe/speed_apple_recipe.json"
+        ]
+      }
+    }
+  ],
+  "variable_elements": [],
+  "sound_elements": [],
+  "tag_elements": {},
+  "tab_element_order": {},
+  "language_map": {
+    "en_us": {
+      "item.speedapple.speed_apple": "加速苹果",
+      "item.speedapple.speed_apple.description_0": "吃下后获得速度Ⅰ，持续10秒"
+    }
+  },
+  "metadata": {
+    "files": [
+      "src/main/java/net/mcreator/speedapple/mixin/RepairItemRecipeMixin.java",
+      "src/main/java/net/mcreator/speedapple/mixin/ServerPlayerMixin.java",
+      "src/main/java/net/mcreator/speedapple/init/SpeedappleModItems.java",
+      "src/main/java/net/mcreator/speedapple/mixin/CommandsMixin.java",
+      "src/main/java/net/mcreator/speedapple/mixin/ItemStackMixin.java",
+      "src/main/java/net/mcreator/speedapple/mixin/PlayerMixin.java",
+      "src/main/resources/META-INF/speedapple.classtweaker",
+      "src/main/java/net/mcreator/speedapple/event/MiscEvents.java",
+      "src/main/java/net/mcreator/speedapple/event/PlayerEvents.java",
+      "src/main/java/net/mcreator/speedapple/mixin/BlockItemMixin.java",
+      "src/main/java/net/mcreator/speedapple/event/BlockEvents.java",
+      "src/main/java/net/mcreator/speedapple/init/SpeedappleModTabs.java",
+      "src/main/java/net/mcreator/speedapple/event/ItemEvents.java",
+      "src/main/java/net/mcreator/speedapple/SpeedappleModClient.java",
+      "src/main/resources/speedapple.mixins.json",
+      "src/main/java/net/mcreator/speedapple/mixin/BoneMealItemMixin.java",
+      "src/main/java/net/mcreator/speedapple/event/LivingEntityEvents.java",
+      "src/main/java/net/mcreator/speedapple/SpeedappleMod.java",
+      "src/main/resources/fabric.mod.json",
+      "src/main/java/net/mcreator/speedapple/mixin/LivingEntityMixin.java",
+      "src/main/java/net/mcreator/speedapple/mixin/ExperienceOrbMixin.java",
+      "src/main/resources/pack.mcmeta"
+    ]
+  },
+  "foldersRoot": {
+    "name": "~",
+    "children": []
+  },
+  "workspaceSettings": {
+    "modid": "speedapple",
+    "modName": "Speed Apple",
+    "version": "1.0.0",
+    "description": "A craftable apple that grants Speed I for 10 seconds after eating.",
+    "author": "Player",
+    "websiteURL": "",
+    "license": "All Rights Reserved",
+    "serverSideOnly": false,
+    "updateURL": "",
+    "requiredMods": [],
+    "dependencies": [],
+    "dependants": [],
+    "mcreatorDependencies": [],
+    "currentGenerator": "fabric-26.2",
+    "modElementsPackage": "net.mcreator.speedapple"
+  },
+  "mcreatorVersion": 202600233518
+}
