@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "package": "dev.randomvillagerskins.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": ["EntityRenderDispatcherMixin"],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

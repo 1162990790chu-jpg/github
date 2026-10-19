@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "randomvillagerskins",
+  "version": "1.0.0",
+  "name": "随机人形村民 / Random Villager Skins",
+  "description": "Villagers use human player models and stable random player skins, with an optional local PNG skin pool.",
+  "authors": ["Player"],
+  "license": "All Rights Reserved",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.randomvillagerskins.RandomVillagerSkinsClient"]
+  },
+  "mixins": ["randomvillagerskins.client.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

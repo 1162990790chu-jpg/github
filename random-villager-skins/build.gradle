@@ -1,0 +1,55 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version '1.17-SNAPSHOT'
+}
+
+version = '1.0.0+mc26.2'
+group = 'dev.randomvillagerskins'
+base.archivesName = 'random-villager-skins'
+
+dependencies {
+    minecraft 'com.mojang:minecraft:26.2'
+    implementation 'net.fabricmc:fabric-loader:0.19.3'
+    implementation 'net.fabricmc.fabric-api:fabric-api:0.155.2+26.2'
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}
+
+sourceSets {
+    skinChecks {
+        java.srcDir 'src/skinChecks/java'
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+tasks.register('verifySkinRules', JavaExec) {
+    dependsOn tasks.named('skinChecksClasses')
+    classpath = sourceSets.skinChecks.runtimeClasspath
+    mainClass = 'dev.randomvillagerskins.client.SkinRulesChecks'
+    systemProperty 'java.awt.headless', 'true'
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('verifySkinRules')
+}
+
+loom {
+    runs {
+        client {
+            programArg '--width'
+            programArg '1060'
+            programArg '--height'
+            programArg '720'
+            vmArg '-Xmx2G'
+        }
+    }
+}

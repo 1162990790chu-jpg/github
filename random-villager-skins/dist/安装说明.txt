@@ -1,0 +1,19 @@
+随机人形村民 / Random Villager Skins 1.0.0
+适用：Minecraft Java 26.2 + Fabric Loader 0.19.3，需要 Java 25 和对应版本 Fabric API。
+
+安装：
+关闭游戏，将 random-villager-skins-1.0.0+mc26.2.jar 放入 PCL2 对应游戏实例的 mods 文件夹，然后启动游戏。
+可以与冒险零食包一起安装。已有匹配的 Fabric API 时保留现有文件。
+
+效果：
+普通村民变成人形玩家模型，幼年村民保持较小体型，交易和 AI 保持原有行为。
+默认随机使用游戏自带的玩家皮肤。皮肤按村民 UUID 固定分配，重进游戏后保持外观。
+
+添加自己的皮肤：
+将标准 64×64 PNG 放入该实例的 config/randomvillagerskins/skins 文件夹。
+普通胳膊用任意名称.png，细胳膊用名称_slim.png。
+每张 PNG 不超过 2 MiB。有有效自定义皮肤时会从这些文件中随机选择，否则使用游戏自带皮肤。
+添加、修改或删除后，在聊天栏输入 /villagerskins reload，或按 F3+T 重载。
+皮肤列表改变时可能重新分配外观。此客户端指令不需要开启作弊。
+
+源码和更多说明见项目 README.md。
