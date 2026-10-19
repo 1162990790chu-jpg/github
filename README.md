@@ -15,3 +15,12 @@
 - [功能与自定义皮肤说明](random-villager-skins/README.md)
 - [仅下载模组 JAR](random-villager-skins/dist/random-villager-skins-1.0.0+mc26.2.jar?raw=true)
 - [下载试玩包](random-villager-skins/随机人形村民-1.0.0-26.2-Fabric试玩包.zip?raw=true)
+
+## 立体食物摆盘 / Tabletop Foods
+
+40 种原版食物和冒险零食包的 3 种食物获得立体模型；右键摆在地上、空手收回，摆放结果随存档保存。
+
+- [GitHub 正式发布页](https://github.com/1162990790chu-jpg/github/releases/tag/tabletop-foods-v1.0.0)
+- [功能、操作与源码说明](tabletop-foods/README.md)
+- [仅下载模组 JAR](tabletop-foods/dist/tabletop-foods-1.0.0+mc26.2.jar?raw=true)
+- [下载试玩包](tabletop-foods/立体食物摆盘-1.0.0-26.2-Fabric试玩包.zip?raw=true)

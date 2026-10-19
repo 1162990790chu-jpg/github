@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "tabletopfoods",
+  "version": "1.0.0",
+  "name": "立体食物摆盘 / Tabletop Foods",
+  "description": "Sculpted 3D food models and persistent food placement on solid surfaces.",
+  "authors": ["Player"],
+  "license": "All Rights Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.tabletopfoods.TabletopFoods"],
+    "client": ["dev.tabletopfoods.client.TabletopFoodsClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

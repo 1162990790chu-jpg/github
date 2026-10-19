@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "tabletopfoods_devtests",
+  "version": "1.0.0",
+  "name": "Tabletop Foods Development Checks",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.tabletopfoods.DevelopmentChecks"],
+    "client": ["dev.tabletopfoods.DevClientCommands"]
+  },
+  "depends": {"tabletopfoods": "*", "fabric-api": "*"}
+}
